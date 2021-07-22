@@ -9,7 +9,7 @@
   become: yes
   become_user: isucon
   register: dep_version_output
-  changed_when: dep_version_output|failed
+  changed_when: dep_version_output.rc != 0
   ignore_errors: True
 
 - name: Debug dep_version_output
@@ -22,7 +22,7 @@
     chdir: /home/isucon
   become: yes
   become_user: isucon
-  when: dep_version_output|failed
+  when: dep_version_output.rc != 0
 
 - name: Install Dependencies
   command: /home/isucon/go/bin/dep ensure

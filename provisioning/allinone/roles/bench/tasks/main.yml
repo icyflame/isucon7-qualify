@@ -9,7 +9,7 @@
   become: yes
   become_user: isucon
   register: golang_version_output
-  changed_when: golang_version_output|failed
+  changed_when: 'golang_version_output.rc != 0'
   ignore_errors: True
 
 - name: Debug golang_version_output
@@ -24,7 +24,7 @@
     MAKEFLAGS: "-j {{ cpu_num.stdout }}"
   become: yes
   become_user: isucon
-  when: golang_version_output|failed or golang_version_output.stdout != "go version go1.9.1 linux/amd64"
+  when: golang_version_output.rc != 0 or golang_version_output.stdout != "go version go1.9.1 linux/amd64"
 
 - name: Add PATH settings
   blockinfile:
@@ -42,7 +42,7 @@
   become: yes
   become_user: isucon
   register: gb_help_output
-  changed_when: gb_help_output|failed
+  changed_when: gb_help_output.rc != 0
   ignore_errors: True
 
 - name: Debug gb_help_output
@@ -55,7 +55,7 @@
     chdir: /home/isucon
   become: yes
   become_user: isucon
-  when: gb_help_output|failed
+  when: gb_help_output.rc != 0
 
 - name: Install Dependencies
   command: gb vendor restore
@@ -66,7 +66,7 @@
   become: yes
   become_user: isucon
   register: gb_ret
-  changed_when: gb_ret|failed
+  changed_when: gb_ret.rc != 0
   #when: isubata_repository.changed
 
 - name: build bench
@@ -78,7 +78,7 @@
   become: yes
   become_user: isucon
   register: make_ret
-  changed_when: make_ret|failed
+  changed_when: make_ret.rc != 0
   #when: isubata_repository.changed
 
 - name: Generate initial data
@@ -88,6 +88,5 @@
   become: yes
   become_user: isucon
   register: gen_init_data_ret
-  changed_when: gen_init_data_ret|failed
+  changed_when: gen_init_data_ret.rc != 0
   when: isubata_repository.changed
-

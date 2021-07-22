@@ -5,7 +5,7 @@
 - name: Install Package
   apt:
     pkg: "{{ item }}"
-    state: installed
+    state: present
   with_items:
     - nginx
 
@@ -33,4 +33,3 @@
     state: link
   notify:
     - reload nginx
-

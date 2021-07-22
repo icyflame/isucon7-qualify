@@ -39,7 +39,7 @@
 - name: Install Dependencies
   apt:
     pkg: "{{ item }}"
-    state: installed
+    state: present
     update_cache: yes
     cache_valid_time: 3600
   become: yes
@@ -65,14 +65,14 @@
     - libxslt1-dev
     - libcurl4-openssl-dev
     - libjpeg-turbo8-dev
-    - libpng12-dev
+    - libpng-dev
     - libtidy-dev
 
 - name: Get number of CPUs
   command: nproc
   become: no
   register: cpu_num
-  changed_when: cpu_num|failed
+  changed_when: 'cpu_num.rc != 0'
 
 - name: Clone isubata
   git:
@@ -99,4 +99,3 @@
     sha256sum: 5669df08e406abf594de0e7a7718ef389e5dc7cc76905e7f6f64711e6aad7fa3
     mode: 0755
   become: yes
-
